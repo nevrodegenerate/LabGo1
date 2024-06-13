@@ -8,18 +8,18 @@ import (
 )
 
 type TimeResponse struct {
-	CurrentTime string `json:"currentTime"`
+	Time string `json:"time"`
 }
 
-func timeHandler(responseWriter http.ResponseWriter, request *http.Request) {
-	currentTimeUTC := time.Now().UTC().Format(time.RFC3339)
-	timeResponse := TimeResponse{CurrentTime: currentTimeUTC}
+func handler(w http.ResponseWriter, r *http.Request) {
+	currentTime := time.Now().UTC().Format(time.RFC3339)
+	response := TimeResponse{Time: currentTime}
 
-	responseWriter.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(responseWriter).Encode(timeResponse)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }
 
 func main() {
-	http.HandleFunc("/time", timeHandler)
+	http.HandleFunc("/time", handler)
 	log.Fatal(http.ListenAndServe(":8795", nil))
 }
