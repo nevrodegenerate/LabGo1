@@ -7,19 +7,21 @@ import (
 	"time"
 )
 
+// TimeResponse представляет структуру ответа с текущим временем
 type TimeResponse struct {
-	Time string `json:"time"`
+	CurrentTime string `json:"currentTime"`
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	currentTime := time.Now().UTC().Format(time.RFC3339)
-	response := TimeResponse{Time: currentTime}
+// timeHandler обрабатывает HTTP-запросы и возвращает текущее время в формате JSON
+func timeHandler(responseWriter http.ResponseWriter, request *http.Request) {
+	currentTimeUTC := time.Now().UTC().Format(time.RFC3339)
+	timeResponse := TimeResponse{CurrentTime: currentTimeUTC}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	responseWriter.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(responseWriter).Encode(timeResponse)
 }
 
 func main() {
-	http.HandleFunc("/time", handler)
+	http.HandleFunc("/time", timeHandler)
 	log.Fatal(http.ListenAndServe(":8795", nil))
 }
